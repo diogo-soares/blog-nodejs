@@ -8,6 +8,8 @@ module.exports = app => {
       middlewaresAuthenticacao.local,
        usuariosControlador.login);
 
+  app.route('/usuario/logout').get(middlewaresAuthenticacao.bearer, usuariosControlador.logout);
+
   app
     .route('/usuario')
     .post(usuariosControlador.adiciona)
