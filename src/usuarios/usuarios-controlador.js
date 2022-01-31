@@ -1,25 +1,26 @@
-const Usuario = require('./usuarios-modelo');
-const { InvalidArgumentError } = require('../erros');
+const Usuario = require("./usuarios-modelo");
+const { InvalidArgumentError } = require("../erros");
 
-const jwt = require('jsonwebtoken');
-const blocklist = require('../../redis/manipula-blocklist');
+// jwt
+const jwt = require("jsonwebtoken");
+const blocklist = require("../../redis/manipula-blocklist");
 
-const crypto = require('crypto');
-const moment = require('moment');
+const crypto = require("crypto");
+const moment = require("moment");
 
 function criaTokenJWT(usuario) {
   const payload = {
     id: usuario.id,
   };
 
-  const token = jwt.sign(payload, process.env.CHAVE_JWT, { expiresIn: '15m' });
+  const token = jwt.sign(payload, process.env.CHAVE_JWT, { expiresIn: "15m" });
   return token;
 }
 
 function criaTokenOpaco(usuario) {
-  const tokenOpaco = crypto.randomBytes(24).toString('hex');
-  const dataExpiracao = moment().add(5, 'd').unix();
-  
+  const tokenOpaco = crypto.randomBytes(24).toString("hex");
+  const dataExpiracao = moment().add(5, "d").unix();
+
   return tokenOpaco;
 }
 
@@ -48,7 +49,7 @@ module.exports = {
     try {
       const accessToken = criaTokenJWT(req.user);
       const refreshToken = criaTokenOpaco(req.user);
-      res.set('Authorization', accessToken);
+      res.set("Authorization", accessToken);
       res.status(200).json({ refreshToken });
     } catch (erro) {
       res.status(500).json({ erro: erro.message });
